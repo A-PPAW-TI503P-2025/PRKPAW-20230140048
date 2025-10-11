@@ -1,6 +1,6 @@
 ## 1. Tampilan Endpoint Create Book (POST)
 
-![Tampilan Create](fix_create_book.png)
+![Tampilan Create](create_book.png)
 
 ## 2. Tampilan Endpoint Read All Books (GET)
 
@@ -12,4 +12,4 @@
 
 ## 4. Tampilan Endpoint Delete Book (DELETE)
 
-![Tampilan Delete](delete_book.png)
+![Tampilan Delete](fix_delete_book.png)
