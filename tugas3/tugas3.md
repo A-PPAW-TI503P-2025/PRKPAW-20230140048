@@ -25,7 +25,7 @@
 
 [Tampilan Check-out belum check in]
 
-<img width="1920" height="1080" alt="Screenshot (98)" src="https://github.com/user-attachments/assets/7b3786eb-01f4-4b61-a117-53f5e9544503" />
+<img width="1920" height="1080" alt="Screenshot 2025-10-23 121034" src="https://github.com/user-attachments/assets/a2f5ebad-ea8b-4198-9414-76db60b1758b" />
 
 
 ## 5. reports/daily (Sebagai Customer)
@@ -35,8 +35,9 @@
 <img width="1920" height="1080" alt="Screenshot (99)" src="https://github.com/user-attachments/assets/70b3c6e0-5133-445c-b9a4-d2aa0602c0c6" />
 
 
-## 5. reports/daily (Sebagai Admin)
+## 6. reports/daily (Sebagai Admin)
 
 [Tampilan Laporan Harian]
 
 <img width="1920" height="1080" alt="Screenshot (100)" src="https://github.com/user-attachments/assets/0510757d-ab65-427a-b8d5-8b2048af3a5c" />
+
