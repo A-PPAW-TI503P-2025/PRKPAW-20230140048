@@ -1,12 +1,30 @@
 const { Presensi } = require("../models");
+const { Op } = require("sequelize");
 
 exports.getDailyReport = async (req, res) => {
   try {
-    console.log("Controller: Mengambil data laporan harian dari database...");
+    const { nama, tanggalMulai, tanggalSelesai } = req.query;
 
-    const presensiRecords = await Presensi.findAll({
+    let options = {
+      where: {},
       order: [["checkIn", "DESC"]],
-    });
+    };
+
+    if (nama) {
+      options.where.nama = {
+        [Op.like]: `%${nama}%`,
+      };
+    }
+
+    if (tanggalMulai && tanggalSelesai) {
+      options.where.checkIn = {
+        [Op.between]: [new Date(tanggalMulai), new Date(tanggalSelesai)],
+      };
+    }
+
+    console.log("Controller: Mengambil data laporan dari database...");
+
+    const presensiRecords = await Presensi.findAll(options);
 
     res.json({
       reportDate: new Date().toLocaleDateString(),
