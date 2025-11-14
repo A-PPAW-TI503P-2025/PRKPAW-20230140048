@@ -15,15 +15,15 @@ const authRoutes = require("./routes/auth");
 // ------------------ MIDDLEWARE ------------------
 
 app.use(cors());
-app.use(helmet()); // Mengatur header HTTP untuk keamanan
-app.use(morgan("dev")); // Logging request (menggunakan format 'dev' untuk output singkat) [cite: 220]
-app.use("/api/auth", authRoutes);
-// Built-in Middleware
+app.use(helmet());
+app.use(morgan("dev"));
+
+// PINDAHKAN INI KE ATAS
 // Middleware untuk parsing body JSON dari request
+// Ini HARUS dijalankan SEBELUM rute (seperti authRoutes)
 app.use(express.json());
 
 // Custom Application-level Middleware (sudah ada dari code Anda)
-// Middleware untuk logging setiap request yang masuk
 app.use((req, res, next) => {
   console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
   next();
@@ -37,10 +37,11 @@ app.get("/", (req, res) => {
 
 // Daftarkan Router
 app.use("/api/books", bookRoutes);
-
-// Daftarkan Router baru untuk Presensi dan Report
 app.use("/api/presensi", presensiRoutes);
 app.use("/api/reports", reportRoutes);
+
+// Rute auth sekarang diletakkan bersama rute API lainnya
+app.use("/api/auth", authRoutes);
 
 // Middleware untuk menangani 404 Not Found (jika request tidak cocok dengan rute manapun di atas)
 app.use((req, res, next) => {
