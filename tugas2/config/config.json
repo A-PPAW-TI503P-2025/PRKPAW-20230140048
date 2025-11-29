@@ -2,7 +2,7 @@
   "development": {
     "username": "root",
     "password": "Aquarius13",
-    "database": "PAW4",
+    "database": "prak_paw",
     "host": "127.0.0.1",
     "dialect": "mysql",
     "port": 3306

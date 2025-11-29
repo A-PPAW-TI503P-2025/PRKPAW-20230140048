@@ -1,12 +1,14 @@
 const { Presensi } = require("../models");
 const { format } = require("date-fns-tz");
 const timeZone = "Asia/Jakarta";
-
 const { validationResult } = require("express-validator");
 
 exports.CheckIn = async (req, res) => {
   try {
     const { id: userId, nama: userName } = req.user;
+
+    const { latitude, longitude } = req.body;
+
     const waktuSekarang = new Date();
 
     const existingRecord = await Presensi.findOne({
@@ -21,13 +23,13 @@ exports.CheckIn = async (req, res) => {
 
     const newRecord = await Presensi.create({
       userId: userId,
-      nama: userName,
       checkIn: waktuSekarang,
+      latitude: latitude,  
+      longitude: longitude
     });
 
     const formattedData = {
       userId: newRecord.userId,
-      nama: newRecord.nama,
       checkIn: format(newRecord.checkIn, "yyyy-MM-dd HH:mm:ssXXX", {
         timeZone,
       }),
@@ -69,7 +71,7 @@ exports.CheckOut = async (req, res) => {
 
     const formattedData = {
       userId: recordToUpdate.userId,
-      nama: recordToUpdate.nama,
+
       checkIn: format(recordToUpdate.checkIn, "yyyy-MM-dd HH:mm:ssXXX", {
         timeZone,
       }),
@@ -132,12 +134,13 @@ exports.updatePresensi = async (req, res) => {
 
   try {
     const presensiId = parseInt(req.params.id, 10);
-    const { checkIn, checkOut, nama } = req.body;
 
-    if (checkIn === undefined && checkOut === undefined && nama === undefined) {
+    const { checkIn, checkOut } = req.body;
+
+    if (checkIn === undefined && checkOut === undefined) {
       return res.status(400).json({
         message:
-          "Request body tidak berisi data yang valid untuk diupdate (checkIn, checkOut, atau nama).",
+          "Request body tidak berisi data yang valid untuk diupdate (checkIn, checkOut).",
       });
     }
 
@@ -151,7 +154,6 @@ exports.updatePresensi = async (req, res) => {
 
     recordToUpdate.checkIn = checkIn || recordToUpdate.checkIn;
     recordToUpdate.checkOut = checkOut || recordToUpdate.checkOut;
-    recordToUpdate.nama = nama || recordToUpdate.nama;
 
     await recordToUpdate.save();
 

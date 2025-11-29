@@ -1,55 +1,72 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { jwtDecode } from "jwt-decode"; // Import jwt-decode
+import { jwtDecode } from "jwt-decode";
+
+const PRIMARY_COLOR = "#23204B";
+const ACCENT_COLOR = "#B30F27";
 
 function DashboardPage() {
   const navigate = useNavigate();
-  const [userName, setUserName] = useState("");
+  const [userName, setUserName] = useState("Loading...");
+  const [userRole, setUserRole] = useState("");
 
-  // Cek token saat komponen dimuat
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       try {
-        // Dekode token untuk mengambil nama
         const decodedToken = jwtDecode(token);
-        setUserName(decodedToken.nama); // Ambil 'nama' dari payload token
+        setUserName(decodedToken.nama);
+        setUserRole(decodedToken.role.toUpperCase());
       } catch (error) {
-        console.error("Token tidak valid:", error);
-        handleLogout(); // Jika token tidak valid, paksa logout
+        handleLogout();
       }
     } else {
-      // Jika tidak ada token, paksa kembali ke login
       navigate("/login");
     }
   }, [navigate]);
 
-  // Fungsi Logout (Memenuhi TUGAS)
-  const handleLogout = () => {
-    localStorage.removeItem("token"); // Hapus token dari local storage
-    navigate("/login"); // Arahkan kembali ke halaman login
-  };
-
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-8">
-      <div className="bg-white p-10 rounded-lg shadow-md text-center w-full max-w-lg">
-        <h1 className="text-3xl font-bold text-green-600 mb-4">
-          Login Sukses!
+    <div className="min-h-screen flex flex-col items-center justify-center p-8 bg-white">
+      <div className="bg-white p-12 rounded-xl shadow-2xl text-center w-full max-w-lg transition duration-500 ease-in-out transform hover:scale-[1.02]">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="#10B981"
+          className="w-16 h-16 mx-auto mb-6"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
+        </svg>
+
+        <h1 className="text-4xl font-extrabold text-gray-900 mb-2">
+          Akses Diberikan!
         </h1>
 
-        {/* Tampilkan nama user */}
-        <p className="text-xl text-gray-700 mb-8">
+        <p className="text-2xl text-gray-700 mt-6 mb-2">
           Selamat Datang,{" "}
-          <span className="font-bold">{userName || "Pengguna"}</span>!
+          <span className="font-extrabold text-green-700">{userName}</span>!
         </p>
-
-        <p className="text-gray-600 mb-8">
-          Anda telah berhasil masuk ke halaman dashboard.
-        </p>
+        <div
+          className="inline-block px-4 py-1 mb-8 rounded-full text-xs font-semibold text-white"
+          style={{ backgroundColor: PRIMARY_COLOR }}
+        >
+          ROLE: {userRole}
+        </div>
 
         <button
           onClick={handleLogout}
-          className="py-2 px-6 bg-red-500 text-white font-semibold rounded-md shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+          className="w-full py-3 px-6 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition duration-300"
+          style={{ backgroundColor: ACCENT_COLOR, outline: "none" }}
         >
           Logout
         </button>

@@ -1,4 +1,4 @@
-const { Presensi } = require("../models");
+const { Presensi, User } = require("../models"); // HARUS IMPORT USER JUGA
 const { Op } = require("sequelize");
 
 exports.getDailyReport = async (req, res) => {
@@ -8,14 +8,29 @@ exports.getDailyReport = async (req, res) => {
     let options = {
       where: {},
       order: [["checkIn", "DESC"]],
+
+      // --- FIX: EAGER LOADING DENGAN INCLUDE ---
+      include: [
+        {
+          model: User,
+          as: "user", // Harus sama dengan alias di models/presensi.js
+          attributes: ["nama"], // Hanya ambil kolom 'nama'
+        },
+      ],
+      // --- END FIX ---
     };
 
+    // Filter Nama (Logika dari Modul 5)
     if (nama) {
-      options.where.nama = {
-        [Op.like]: `%${nama}%`,
+      // Kita filter berdasarkan nama yang ada di tabel Users (tabel relasi)
+      options.include[0].where = {
+        nama: {
+          [Op.like]: `%${nama}%`,
+        },
       };
     }
 
+    // Filter Rentang Tanggal (Logika dari Modul 5)
     if (tanggalMulai && tanggalSelesai) {
       options.where.checkIn = {
         [Op.between]: [new Date(tanggalMulai), new Date(tanggalSelesai)],
@@ -24,6 +39,7 @@ exports.getDailyReport = async (req, res) => {
 
     console.log("Controller: Mengambil data laporan dari database...");
 
+    // Query akan mengambil data Presensi DAN User terkait
     const presensiRecords = await Presensi.findAll(options);
 
     res.json({
