@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const API_URL = "http://localhost:3001/api/reports/daily";
+const BASE_URL = "http://localhost:3001/";
 
 function ReportPage() {
   const [reports, setReports] = useState([]);
@@ -11,6 +12,7 @@ function ReportPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [tanggalMulai, setTanggalMulai] = useState("");
   const [tanggalSelesai, setTanggalSelesai] = useState("");
+  const [selectedPhoto, setSelectedPhoto] = useState(null);
 
   const fetchReports = async (query = "") => {
     const token = localStorage.getItem("token");
@@ -20,11 +22,7 @@ function ReportPage() {
     }
 
     try {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
+      const config = { headers: { Authorization: `Bearer ${token}` } };
 
       let dateQuery = "";
       if (tanggalMulai && tanggalSelesai) {
@@ -69,6 +67,30 @@ function ReportPage() {
         Laporan Presensi
       </h1>
 
+      {selectedPhoto && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-75 z-50 flex justify-center items-center"
+          onClick={() => setSelectedPhoto(null)}
+        >
+          <div
+            className="bg-white p-4 rounded-lg max-w-xl max-h-screen overflow-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <img
+              src={selectedPhoto}
+              alt="Bukti Presensi"
+              className="w-full h-auto"
+            />
+            <button
+              onClick={() => setSelectedPhoto(null)}
+              className="mt-3 w-full py-2 bg-red-500 text-white rounded"
+            >
+              Tutup
+            </button>
+          </div>
+        </div>
+      )}
+
       <form
         onSubmit={handleSearchSubmit}
         className="mb-6 space-y-4 p-4 border rounded-lg shadow-sm bg-gray-50"
@@ -89,7 +111,6 @@ function ReportPage() {
           </button>
         </div>
 
-        
         <div className="flex space-x-4 items-center">
           <label className="text-sm font-medium text-gray-700">
             Rentang Tanggal:
@@ -109,7 +130,7 @@ function ReportPage() {
           />
           <button
             type="button"
-            onClick={() => fetchReports(searchTerm)} 
+            onClick={() => fetchReports(searchTerm)}
             className="py-2 px-4 bg-gray-500 text-white font-semibold rounded-md shadow-sm hover:bg-gray-600"
           >
             Filter Tanggal
@@ -135,6 +156,9 @@ function ReportPage() {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Check-Out
                 </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Bukti Foto
+                </th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
@@ -142,8 +166,7 @@ function ReportPage() {
                 reports.map((presensi) => (
                   <tr key={presensi.id}>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      
-                      {presensi.user ? presensi.user.nama : "N/A"}  
+                      {presensi.user ? presensi.user.nama : "N/A"}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {new Date(presensi.checkIn).toLocaleString("id-ID", {
@@ -157,12 +180,27 @@ function ReportPage() {
                           })
                         : "Belum Check-Out"}
                     </td>
+                    {/* Kolom Bukti Foto */}
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {presensi.buktiFoto ? (
+                        <img
+                          src={`${BASE_URL}${presensi.buktiFoto}`}
+                          alt="Bukti"
+                          className="w-12 h-12 object-cover rounded-md cursor-pointer hover:opacity-80 transition"
+                          onClick={() =>
+                            setSelectedPhoto(`${BASE_URL}${presensi.buktiFoto}`)
+                          }
+                        />
+                      ) : (
+                        "Tidak ada"
+                      )}
+                    </td>
                   </tr>
                 ))
               ) : (
                 <tr>
                   <td
-                    colSpan="3"
+                    colSpan="4"
                     className="px-6 py-4 text-center text-gray-500"
                   >
                     Tidak ada data yang ditemukan.

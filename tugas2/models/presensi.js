@@ -26,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       checkOut: {
         type: DataTypes.DATE,
-        allowNull: true, // boleh null
+        allowNull: true,
       },
     },
     {
