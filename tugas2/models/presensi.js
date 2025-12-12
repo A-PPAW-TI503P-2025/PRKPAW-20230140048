@@ -2,32 +2,19 @@
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Presensi extends Model {
-    /**
-     * Helper method for defining associations.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
-      // nambah relasi
-      Presensi.belongsTo(models.User, {
-        foreignKey: "userId",
-        as: "user",
-      });
+      Presensi.belongsTo(models.User, { foreignKey: "userId", as: "user" });
     }
   }
   Presensi.init(
     {
-      userId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      checkIn: {
-        type: DataTypes.DATE,
-        allowNull: false,
-      },
-      checkOut: {
-        type: DataTypes.DATE,
-        allowNull: true,
-      },
+      userId: { type: DataTypes.INTEGER, allowNull: false },
+      checkIn: { type: DataTypes.DATE, allowNull: false },
+      checkOut: { type: DataTypes.DATE, allowNull: true },
+      // PASTIKAN 3 BARIS INI ADA:
+      latitude: { type: DataTypes.DECIMAL(10, 8), allowNull: true },
+      longitude: { type: DataTypes.DECIMAL(11, 8), allowNull: true },
+      buktiFoto: { type: DataTypes.STRING, allowNull: true },
     },
     {
       sequelize,

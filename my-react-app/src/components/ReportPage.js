@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const API_URL = "http://localhost:3001/api/reports/daily";
+// Pastikan BASE_URL mengarah ke root backend Anda
 const BASE_URL = "http://localhost:3001/";
 
 function ReportPage() {
@@ -12,6 +13,8 @@ function ReportPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [tanggalMulai, setTanggalMulai] = useState("");
   const [tanggalSelesai, setTanggalSelesai] = useState("");
+
+  // State untuk Modal (Popup Gambar)
   const [selectedPhoto, setSelectedPhoto] = useState(null);
 
   const fetchReports = async (query = "") => {
@@ -54,6 +57,7 @@ function ReportPage() {
 
   useEffect(() => {
     fetchReports("");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigate]);
 
   const handleSearchSubmit = (e) => {
@@ -67,23 +71,24 @@ function ReportPage() {
         Laporan Presensi
       </h1>
 
+      {/* --- MODAL POPUP GAMBAR --- */}
       {selectedPhoto && (
         <div
           className="fixed inset-0 bg-black bg-opacity-75 z-50 flex justify-center items-center"
-          onClick={() => setSelectedPhoto(null)}
+          onClick={() => setSelectedPhoto(null)} // Tutup saat klik background
         >
           <div
             className="bg-white p-4 rounded-lg max-w-xl max-h-screen overflow-auto"
-            onClick={(e) => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()} // Cegah tutup saat klik gambar
           >
             <img
               src={selectedPhoto}
-              alt="Bukti Presensi"
-              className="w-full h-auto"
+              alt="Bukti Presensi Full"
+              className="w-full h-auto rounded"
             />
             <button
               onClick={() => setSelectedPhoto(null)}
-              className="mt-3 w-full py-2 bg-red-500 text-white rounded"
+              className="mt-4 w-full py-2 bg-red-600 text-white font-bold rounded hover:bg-red-700 transition"
             >
               Tutup
             </button>
@@ -91,6 +96,7 @@ function ReportPage() {
         </div>
       )}
 
+      {/* --- FILTER & SEARCH --- */}
       <form
         onSubmit={handleSearchSubmit}
         className="mb-6 space-y-4 p-4 border rounded-lg shadow-sm bg-gray-50"
@@ -142,6 +148,7 @@ function ReportPage() {
         <p className="text-red-600 bg-red-100 p-4 rounded-md mb-4">{error}</p>
       )}
 
+      {/* --- TABEL LAPORAN --- */}
       {!error && (
         <div className="bg-white shadow-md rounded-lg overflow-hidden">
           <table className="min-w-full divide-y divide-gray-200">
@@ -180,19 +187,21 @@ function ReportPage() {
                           })
                         : "Belum Check-Out"}
                     </td>
-                    {/* Kolom Bukti Foto */}
+
+                    {/* --- KOLOM BUKTI FOTO --- */}
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {presensi.buktiFoto ? (
                         <img
+                          // Menggabungkan BASE_URL dengan path dari database
                           src={`${BASE_URL}${presensi.buktiFoto}`}
                           alt="Bukti"
-                          className="w-12 h-12 object-cover rounded-md cursor-pointer hover:opacity-80 transition"
+                          className="w-12 h-12 object-cover rounded-md cursor-pointer hover:opacity-80 transition border border-gray-300"
                           onClick={() =>
                             setSelectedPhoto(`${BASE_URL}${presensi.buktiFoto}`)
                           }
                         />
                       ) : (
-                        "Tidak ada"
+                        <span className="text-gray-400 italic">Tidak ada</span>
                       )}
                     </td>
                   </tr>

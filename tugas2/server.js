@@ -15,7 +15,11 @@ const reportRoutes = require("./routes/reports");
 const authRoutes = require("./routes/auth");
 
 app.use(cors());
-app.use(helmet());
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+  })
+);
 app.use(morgan("dev"));
 app.use(express.json());
 

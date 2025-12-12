@@ -33,7 +33,11 @@ exports.CheckIn = async (req, res) => {
     const { id: userId, nama: userName } = req.user;
     const { latitude, longitude } = req.body;
 
-    const buktiFoto = req.file ? req.file.path : null;
+    // Ambil path OS dari Multer
+    const osPath = req.file ? req.file.path : null;
+
+    // FIX: Normalisasi path (Ganti backslash '\' dengan forward slash '/' untuk URL)
+    const buktiFoto = osPath ? osPath.replace(/\\/g, "/") : null;
 
     const waktuSekarang = new Date();
 
@@ -52,7 +56,7 @@ exports.CheckIn = async (req, res) => {
       checkIn: waktuSekarang,
       latitude: latitude,
       longitude: longitude,
-      buktiFoto: buktiFoto,
+      buktiFoto: buktiFoto, // Simpan path yang sudah dinormalisasi
     });
 
     const formattedData = {
@@ -81,6 +85,7 @@ exports.CheckIn = async (req, res) => {
   }
 };
 
+// ... (FUNGSI CHECK-OUT, deletePresensi, updatePresensi tetap sama) ...
 exports.CheckOut = async (req, res) => {
   try {
     const { id: userId, nama: userName } = req.user;
