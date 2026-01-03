@@ -6,6 +6,7 @@ import DashboardPage from "./components/DashboardPage";
 import Navbar from "./components/Navbar";
 import PresensiPage from "./components/PresensiPage";
 import ReportPage from "./components/ReportPage";
+import SensorPage from "./components/SensorPage";
 
 // const PRIMARY_COLOR = "#23204B";
 
@@ -22,6 +23,8 @@ function App() {
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/presensi" element={<PresensiPage />} />
           <Route path="/reports" element={<ReportPage />} />
+
+          <Route path="/monitoring" element={<SensorPage />} />
 
           <Route path="/" element={<LoginPage />} />
         </Routes>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom"; 
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 
 const PRIMARY_COLOR = "#23204B";
@@ -7,7 +7,7 @@ const ACCENT_COLOR = "#B30F27";
 
 function Navbar() {
   const navigate = useNavigate();
-  const location = useLocation(); 
+  const location = useLocation();
   const [user, setUser] = useState(null);
 
   const handleLogout = () => {
@@ -23,17 +23,15 @@ function Navbar() {
         const decoded = jwtDecode(token);
         setUser(decoded);
       } catch (error) {
-        
         localStorage.removeItem("token");
         setUser(null);
       }
     } else {
       setUser(null);
     }
-    
   }, [location.pathname]);
 
-  
+  // Tampilan jika belum Login
   if (!user) {
     return (
       <nav
@@ -50,25 +48,35 @@ function Navbar() {
     );
   }
 
+  // Tampilan jika sudah Login
   return (
     <nav
       className="p-4 flex justify-between items-center text-white shadow-md"
       style={{ backgroundColor: PRIMARY_COLOR }}
     >
-      
-      <div className="flex space-x-6">
+      <div className="flex space-x-6 items-center">
         <Link to="/dashboard" className="font-bold hover:text-gray-200">
           Dashboard
         </Link>
+
         <Link to="/presensi" className="hover:text-gray-200">
           Presensi
         </Link>
-        
+
+        {/* --- MENU BARU: MONITORING IOT --- */}
+        <Link
+          to="/monitoring"
+          className="font-bold text-yellow-400 hover:text-yellow-200 transition"
+        >
+          Monitoring IoT
+        </Link>
+        {/* -------------------------------- */}
+
         {user.role === "admin" && (
           <Link
             to="/reports"
-            className="hover:text-gray-200"
-            style={{ color: ACCENT_COLOR }}
+            className="hover:text-gray-200 font-semibold"
+            style={{ color: ACCENT_COLOR }} // Warna merah sesuai request sebelumnya
           >
             Laporan Admin
           </Link>
@@ -81,7 +89,7 @@ function Navbar() {
         </span>
         <button
           onClick={handleLogout}
-          className="py-1 px-3 text-sm rounded font-semibold transition duration-200"
+          className="py-1 px-3 text-sm rounded font-semibold transition duration-200 hover:opacity-90"
           style={{ backgroundColor: ACCENT_COLOR, color: "white" }}
         >
           Logout

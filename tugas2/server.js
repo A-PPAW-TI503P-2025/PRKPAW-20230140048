@@ -14,6 +14,8 @@ const presensiRoutes = require("./routes/presensi");
 const reportRoutes = require("./routes/reports");
 const authRoutes = require("./routes/auth");
 
+const iotRoutes = require("./routes/iot");
+
 app.use(cors());
 app.use(
   helmet({
@@ -38,7 +40,7 @@ app.use("/api/books", bookRoutes);
 app.use("/api/presensi", presensiRoutes);
 app.use("/api/reports", reportRoutes);
 app.use("/api/auth", authRoutes);
-
+app.use("/api/iot", iotRoutes);
 app.use((req, res, next) => {
   res.status(404).json({ message: "Endpoint tidak ditemukan" });
 });
